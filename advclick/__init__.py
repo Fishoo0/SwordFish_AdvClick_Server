@@ -3,9 +3,8 @@ from builtins import OSError
 import os
 from flask import Flask
 
-
 # Factory Method
-
+from advclick.utils import json_response
 
 
 def create_app(test_config=None):
@@ -42,15 +41,18 @@ def create_app(test_config=None):
     from advclick.account import auth_api
     app.register_blueprint(auth_api.bp)
 
-    # register home blueprint
-    from advclick.home import home_api
-    app.register_blueprint(home_api.bp)
+    # register click blueprint
+    from advclick.click import click_api
+    app.register_blueprint(click_api.bp)
 
-    #lls
+    # register manager blueprint
+    from advclick.manager import manager_api
+    app.register_blueprint(manager_api.bp)
 
     # a simple page that says hello
-    @app.route('/hello')
+    @app.route('/')
     def hello():
-        return 'Hello, World! I am flask1.0.2 in pip3 !!!'
+        return json_response.get_success_msg(
+            "Welcome to AdvClick Project.\n\nAll Rights Reserved @AcmeS SwordFish Project 2018.\nMake it Simple & Possible.")
 
     return app

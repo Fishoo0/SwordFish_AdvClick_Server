@@ -5,22 +5,26 @@ from advclick.account.token import Token
 from advclick.db.db import get_db
 
 
-def find_user(user_name):
-    print('find_user -> ', user_name)
+def find_user(user_id, user_name):
+    print('find_user user_id -> ' + user_id + ' user_name -> ' + user_name)
     try:
         db = get_db()
-        cur = db.execute('select * from User where name=?', (user_name,))
+        cur = None
+        if user_id is not None:
+            cur = db.execute('select * from User where name=?', (user_name,))
+        elif user_name is not None:
+            cur = db.execute('select * from User where id=?', (user_id,))
     except sqlite3.OperationalError:
         print('Can not find user')
     else:
-        values = cur.fetchall()
-        if len(values) == 1:
-            return values[0]
+        if cur is not None:
+            values = cur.fetchall()
+            if len(values) == 1:
+                return values[0]
     return None
 
-
 def register(user_name, user_password):
-    if find_user(user_name) is not None:
+    if find_user(user_name=user_name) is not None:
         return 'User name has been registered!'
     db = get_db()
     db.execute('insert into User(name,password,time) values (?,?,?)', (user_name, user_password, asctime()))
@@ -31,7 +35,7 @@ def register(user_name, user_password):
 
 def login(user_name, user_password=None):
     print("login -> " + user_name)
-    item = find_user(user_name)
+    item = find_user(user_name=user_name)
     if item is not None:
         password = item[3]
         token = item[4]
