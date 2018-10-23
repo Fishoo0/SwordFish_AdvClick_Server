@@ -11,20 +11,20 @@ create table User (
     token text,
 
     cover text,
-    sex text,
     gender integer,
     birth text,
     age text,
     location text,
     about text,
+    telephone text,
 
-    im_qq text,
+    im_qq text not null,
     alipay text not null,
     alipay_name text,
 
     prime_level integer default 1,
-    prime_open_time integer default 0,
-    prime_level_duration default -1,
+    prime_open_time long default 0,
+    prime_period long default -1,
 
     youmeng text
 );
@@ -35,8 +35,15 @@ create table Click (
 
     user_id integer not null,
 
-    earn_count float default 0,
-    with_draw_times integer default 0,
+    earn_amount float default 188.99,
+
+    with_draw_times_left integer default 1,
+
+    request_with_draw_amount float default -1,
+    request_with_draw_time time,
+
+    manager_with_draw_amount float,
+    manager_with_draw_time time,
 
     foreign key (user_id) references User (id)
 );

@@ -5,15 +5,15 @@ from flask import (
     jsonify)
 
 from advclick.account import auth
-from advclick.utils import json_response
+from advclick.utils import json_response, json_utils, string_utils
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-def check_params(user_name, user_password=None, check_password=True):
-    if user_name is None:
+def check_params(request_name, request_password=None, check_password=True):
+    if request_name is None:
         return json_response.get_error_msg('Invalid user_name')
-    if (user_password is None or user_password is '') and check_password:
+    if (request_password is None or request_password is '') and check_password:
         return json_response.get_error_msg('Invalid user_password')
     return None
 
@@ -24,13 +24,29 @@ def register():
     content = request.get_json()
     if content is None:
         return json_response.get_error_msg('Invalid request')
-    user_name = content.get('user_name')
-    user_password = content.get('user_password')
-    check_result = check_params(user_name, user_password)
+    name = content.get('name')
+    password = content.get('password')
+    im_qq = content.get('im_qq')
+    alipay = content.get('alipay')
+    alipay_name = content.get('alipay_name')
+
+    check_result = check_params(name, password)
     if check_result is not None:
         return check_result
 
-    result = auth.register(user_name, user_password)
+    if string_utils.is_empty(im_qq):
+        return json_response.get_error_msg('Invalid im_qq')
+    if string_utils.is_empty(alipay):
+        return json_response.get_error_msg('Invalid alipay')
+    if string_utils.is_empty(alipay_name):
+        return json_response.get_error_msg('Invalid alipay_name')
+
+    result = auth.find_user(request_name=name)
+    if result is not None:
+        return json_response.get_error_msg(
+            'This name [' + name + ']  has been registered yet, please login or change another name.')
+
+    result = auth.register(name, password, im_qq, alipay, alipay_name)
     if result is not None:
         return json_response.get_error_msg(result)
     return json_response.get_success_msg('Register successfully!')
@@ -43,15 +59,15 @@ def login():
     if content is None:
         return json_response.get_error_msg('Invalid request')
     print(content)
-    user_name = content.get('user_name')
-    user_password = content.get('user_password')
-    check_result = check_params(user_name, user_password, check_password=False)
+    name = content.get('name')
+    password = content.get('password')
+    check_result = check_params(name, password, check_password=False)
     if check_result is not None:
         return check_result
-    result = auth.login(user_name, user_password)
+    result = auth.login(name, password)
     if result is not None:
         return json_response.get_error_msg(result)
-    return json_response.get_success_msg('Login successfully!')
+    return json_response.get_success_data(auth.find_user(request_name=name, to_dict=True))
 
 
 @bp.route("/logout", methods=('GET', 'POST'))
@@ -60,14 +76,14 @@ def logout():
     content = request.get_json()
     if content is None:
         return json_response.get_error_msg('Invalid request')
-    user_name = content.get('user_name')
-    check_result = check_params(user_name, check_password=False)
+    name = content.get('name')
+    check_result = check_params(name, check_password=False)
     if check_result is not None:
         return check_result
-    result = auth.logout(user_name)
+    result = auth.logout(name)
     if result is not None:
         return json_response.get_error_msg(result)
-    return json_response.get_success_msg('Logout successfully!', data=json.dumps({'user_name': user_name}))
+    return json_response.get_success_msg('Logout successfully!', data=json.dumps({'user_name': name}))
 
 
 @bp.route("/get_user", methods=('GET', 'POST'))
@@ -77,8 +93,8 @@ def get_user():
     if content is None:
         return json_response.get_error_msg('Invalid request')
     print(content)
-    user_id = content.get('user_id')
-    result = auth.find_user(user_id=user_id)
+    request_id = content.get('id')
+    result = auth.find_user(request_id=request_id)
     if result is None:
         return json_response.get_error_msg('Can not find User')
     return json_response.get_success_msg(jsonify(result))
