@@ -45,9 +45,9 @@ def create_app(test_config=None):
     from advclick.click import click_api
     app.register_blueprint(click_api.bp)
 
-    # register manager blueprint
-    from advclick.manager import manager_api
-    app.register_blueprint(manager_api.bp)
+    # register admin blueprint
+    from advclick.admin import admin_api
+    app.register_blueprint(admin_api.bp)
 
     # a simple page that says hello
     @app.route('/')

@@ -1,11 +1,10 @@
 import json
 
 from flask import (
-    Blueprint, request,
-    jsonify)
+    Blueprint, request)
 
 from advclick.account import auth
-from advclick.utils import json_response, json_utils, string_utils
+from advclick.utils import json_response, string_utils
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -67,7 +66,7 @@ def login():
     result = auth.login(name, password)
     if result is not None:
         return json_response.get_error_msg(result)
-    return json_response.get_success_data(auth.find_user(request_name=name, to_dict=True))
+    return json_response.get_success_data(data=auth.find_user(request_name=name), message='Login Success')
 
 
 @bp.route("/logout", methods=('GET', 'POST'))
@@ -95,6 +94,52 @@ def get_user():
     print(content)
     request_id = content.get('id')
     result = auth.find_user(request_id=request_id)
-    if result is None:
-        return json_response.get_error_msg('Can not find User')
-    return json_response.get_success_msg(jsonify(result))
+    if isinstance(result, dict):
+        return json_response.get_success_data(result)
+    else:
+        return json_response.get_error_msg(result)
+
+
+@bp.route("/update_profile", methods=('GET', 'POST'))
+def update_profile():
+    print("update_profile")
+    content = request.get_json()
+    if content is None:
+        return json_response.get_error_msg('Invalid request')
+    print(content)
+    request_id = content.get('id')
+    request_password = content.get('password')
+    request_im_qq = content.get('im_qq')
+    request_telephone = content.get('telephone')
+
+    request_alipay = content.get('alipay')
+    request_alipay_name = content.get('alipay_name')
+    request_prime_level = content.get('prime_level')
+    request_prime_period = content.get('prime_period')
+    request_youmeng_checked = content.get('youmeng_checked')
+
+    result = auth.update_profile(request_id, request_password, request_im_qq, request_telephone, request_alipay,
+                                 request_alipay_name, request_prime_level, request_prime_period,
+                                 request_youmeng_checked)
+    return json_response.get_response(result)
+
+
+@bp.route("/check_youmeng", methods=('GET', 'POST'))
+def check_youmeng():
+    print("check_youmeng")
+    content = request.get_json()
+    if content is None:
+        return json_response.get_error_msg('Invalid request')
+    print(content)
+    request_id = content.get('id')
+    baidu = content.get('youmeng_baidu')
+    google = content.get('youmeng_google')
+    sougou = content.get('youmeng_sougou')
+    taobao = content.get('youmeng_taobao')
+    result = auth.check_youmeng(request_id, baidu, google, sougou, taobao)
+    if isinstance(result, dict):
+        return json_response.get_success_data(result)
+    elif isinstance(result, str):
+        return json_response.get_error_msg(result)
+    else:
+        return json_response.get_error_msg(result)

@@ -1,5 +1,6 @@
 drop table if exists User;
 drop table if exists Click;
+drop table if exists Youmeng;
 drop table if exists Log;
 
 create table User (
@@ -18,15 +19,20 @@ create table User (
     about text,
     telephone text,
 
+    is_admin integer default 0,
+
     im_qq text not null,
     alipay text not null,
     alipay_name text,
 
-    prime_level integer default 1,
+    prime_level integer default 0,
     prime_open_time long default 0,
-    prime_period long default -1,
+    prime_end_time long default 0,
 
-    youmeng text
+    youmeng_checked integer default 0,
+
+    server_time long
+
 );
 
 create table Click (
@@ -35,15 +41,14 @@ create table Click (
 
     user_id integer not null,
 
-    earn_amount float default 188.99,
+    earn_amount float default 0.0,
 
     with_draw_times_left integer default 1,
 
-    request_with_draw_amount float default -1,
+    request_with_draw_amount float default 0.0,
     request_with_draw_time time,
 
-    manager_with_draw_amount float,
-    manager_with_draw_time time,
+    manager_deal_time time,
 
     foreign key (user_id) references User (id)
 );

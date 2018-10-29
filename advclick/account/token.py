@@ -4,7 +4,7 @@ import time
 # My first Python class
 
 # About one month
-EXPIRED_TIME = 60 * 60 * 24 * 1
+EXPIRED_TIME = 60 * 60 * 24 * 1 * 1000
 DIVIDER = ":"
 ASCII = 'ascii'
 
