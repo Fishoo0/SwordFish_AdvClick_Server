@@ -140,20 +140,17 @@ def onekey_withdraw(request_user_id):
 
         if current_earn_amount > 0:
             if current_request_with_draw_amount > 0:
-                if current_with_draw_times_left >= 1:
-                    if current_request_with_draw_amount > current_earn_amount:
-                        request_request_with_draw_amount = current_request_with_draw_amount - current_earn_amount
-                    else:
-                        request_request_with_draw_amount = 0
-                    request_earn_amount = current_earn_amount - (
-                        current_request_with_draw_amount - request_request_with_draw_amount)
-                    request_with_draw_times_left = current_with_draw_times_left - 1
-                    return update_click(request_user_id, request_earn_amount, request_with_draw_times_left,
-                                        request_request_with_draw_amount)
+                if current_request_with_draw_amount > current_earn_amount:
+                    request_request_with_draw_amount = current_request_with_draw_amount - current_earn_amount
                 else:
-                    return 'You have no withdraw times left.'
+                    request_request_with_draw_amount = 0
+                request_earn_amount = current_earn_amount - (
+                    current_request_with_draw_amount - request_request_with_draw_amount)
+                request_with_draw_times_left = current_with_draw_times_left - 1
+                return update_click(request_user_id, request_earn_amount, request_with_draw_times_left,
+                                    request_request_with_draw_amount)
             else:
-                return 'You have no any withdraw amount left.'
+                return 'No any withdraw amount left.'
         else:
-            return 'You have no earn amount left.'
+            return 'No earn amount left.'
     return 'Can not find such user.'

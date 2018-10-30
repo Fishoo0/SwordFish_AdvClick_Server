@@ -61,13 +61,12 @@ create table Log (
 
     operation text not null,
 
-    device text not null,
+    device text,
     os text,
     android_version text,
 
-    netwrok text,
+    network text,
     ip text not null,
-    location text,
+    location text
 
-    foreign key (user_id) references User (id)
 );

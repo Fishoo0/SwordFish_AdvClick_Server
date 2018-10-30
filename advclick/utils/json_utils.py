@@ -24,8 +24,9 @@ def db_to_json_item(cursor, item):
 
 def db_to_json_items(cursor):
     row_headers = [key[0] for key in cursor.description]
-    json_data = []
+    array = []
     items = cursor.fetchall()
     for item in items:
-        json_data.append(dict(zip(row_headers, item)))
-    return json_data
+        dict_item = dict(zip(row_headers, item))
+        array.append(dict_item)
+    return array

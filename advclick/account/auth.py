@@ -59,7 +59,7 @@ def register(request_name, request_password, request_im_qq, request_alipay, requ
                (time.asctime(), find_user_id(request_name=request_name)))
     print('User ? has been inserted into db successfully', request_name)
     db.commit()
-    return None
+    return find_user(request_name=request_name)
 
 
 def login(request_name, request_password=None):
@@ -74,7 +74,7 @@ def login(request_name, request_password=None):
             get_db().execute('update User set token=? where name=?', (token_obj.get_token(), request_name))
             get_db().commit()
             print('User has login successfully ,and token has been refreshed')
-            return None
+            return find_user(request_name=request_name)
         elif request_password is None or request_password is '':
             print('request_password is None')
             if token is not None or token is not '':
@@ -82,7 +82,7 @@ def login(request_name, request_password=None):
                 token_obj = Token(token=token)
                 if token_obj.verify_token():
                     print('User has passed token verify!')
-                    return None
+                    return find_user(request_name=request_name)
                 return 'User Token has expired! (' + request_name + ')'
         return 'Password is not correct && token is null!'
     else:
@@ -90,11 +90,12 @@ def login(request_name, request_password=None):
     return 'Unknown error'
 
 
-def logout(request_name):
-    get_db().execute('update User set token=? where name=?', (None, request_name))
+def logout(request_id):
+    print('logout')
+    get_db().execute('update User set token=? where id=?', (None, request_id))
     get_db().commit()
-    print('User ? has logout successfully!', request_name)
-    return None
+    print('User ? has logout successfully!', request_id)
+    return find_user(request_id=request_id)
 
 
 def update_profile(request_id, request_password=None, request_qq=None, request_phone=None,

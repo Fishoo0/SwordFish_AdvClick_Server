@@ -1,3 +1,4 @@
+import array
 from flask import jsonify
 
 BAD_REQUEST = 400
@@ -27,7 +28,7 @@ def get_success_data(data=None, message='Success'):
 
 
 def get_response(result):
-    if isinstance(result, dict):
+    if isinstance(result, dict) or isinstance(result, list):
         return get_success_data(result)
     else:
         return get_error_msg(message=result)

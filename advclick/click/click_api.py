@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from advclick.click import click
+from advclick.log import log
 from advclick.utils import json_response
 
 bp = Blueprint('click', __name__, url_prefix='/click')
@@ -49,6 +50,7 @@ def request_withdraw():
         return json_response.get_error_msg('Invalid params user_id -> ' + user_id)
     result = click.request_withdraw(user_id, value=value)
     if isinstance(result, dict):
+        log.add_log(user_id, 'withdraw', content.get('ip'), content.get('location'))
         return json_response.get_success_data(result)
     else:
         return json_response.get_error_msg(result)

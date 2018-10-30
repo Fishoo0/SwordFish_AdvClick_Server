@@ -4,6 +4,7 @@ from flask import (
     Blueprint, request)
 
 from advclick.account import auth
+from advclick.log import log
 from advclick.utils import json_response, string_utils
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -46,9 +47,11 @@ def register():
             'This name [' + name + ']  has been registered yet, please login or change another name.')
 
     result = auth.register(name, password, im_qq, alipay, alipay_name)
-    if result is not None:
+    if isinstance(result, dict):
+        log.add_log(result['id'], 'register', content.get('ip'), content.get('location'))
+        return json_response.get_success_data(data=result, message='Register successfully!')
+    else:
         return json_response.get_error_msg(result)
-    return json_response.get_success_msg('Register successfully!')
 
 
 @bp.route("/login", methods=('GET', 'POST'))
@@ -64,9 +67,11 @@ def login():
     if check_result is not None:
         return check_result
     result = auth.login(name, password)
-    if result is not None:
+    if isinstance(result, dict):
+        log.add_log(result['id'], 'login', content.get('ip'), content.get('location'))
+        return json_response.get_success_data(data=result, message='Login Success')
+    else:
         return json_response.get_error_msg(result)
-    return json_response.get_success_data(data=auth.find_user(request_name=name), message='Login Success')
 
 
 @bp.route("/logout", methods=('GET', 'POST'))
@@ -75,14 +80,13 @@ def logout():
     content = request.get_json()
     if content is None:
         return json_response.get_error_msg('Invalid request')
-    name = content.get('name')
-    check_result = check_params(name, check_password=False)
-    if check_result is not None:
-        return check_result
-    result = auth.logout(name)
-    if result is not None:
+    request_id = content.get('id')
+    result = auth.logout(request_id)
+    if isinstance(result, dict):
+        log.add_log(request_id, 'logout', content.get('ip'), content.get('location'))
+        return json_response.get_success_msg('Logout successfully!', data=result)
+    else:
         return json_response.get_error_msg(result)
-    return json_response.get_success_msg('Logout successfully!', data=json.dumps({'user_name': name}))
 
 
 @bp.route("/get_user", methods=('GET', 'POST'))

@@ -49,6 +49,10 @@ def create_app(test_config=None):
     from advclick.admin import admin_api
     app.register_blueprint(admin_api.bp)
 
+    # register log blueprint
+    from advclick.log import log_api
+    app.register_blueprint(log_api.bp)
+
     # a simple page that says hello
     @app.route('/')
     def hello():
