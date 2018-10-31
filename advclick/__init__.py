@@ -53,6 +53,11 @@ def create_app(test_config=None):
     from advclick.log import log_api
     app.register_blueprint(log_api.bp)
 
+
+    # register log blueprint
+    from advclick.image import image_api
+    app.register_blueprint(image_api.bp)
+
     # a simple page that says hello
     @app.route('/')
     def hello():
