@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="14c10b07-bbc8-418f-9c6a-01808cb45ce4" name="Default" comment="beta1">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/wechat_card.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/advclick/image/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/advclick/image/image_api.py" />
+    <list default="true" id="14c10b07-bbc8-418f-9c6a-01808cb45ce4" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/clean_and_run.sh" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/advclick/__init__.py" afterPath="$PROJECT_DIR$/advclick/__init__.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -310,7 +306,14 @@
       <option name="project" value="LOCAL" />
       <updated>1540889770808</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add logs">
+      <created>1540972784332</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1540972784332</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -378,7 +381,8 @@
     <MESSAGE value="备份提交 2018.10.23" />
     <MESSAGE value="备份提交 2018.10.29" />
     <MESSAGE value="beta1" />
-    <option name="LAST_COMMIT_MESSAGE" value="beta1" />
+    <MESSAGE value="add logs" />
+    <option name="LAST_COMMIT_MESSAGE" value="add logs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
